@@ -48,7 +48,7 @@ class ShapesConfig (Config) :
     # Train on 1 GPU and 8 images per GPU. We can put multiple images on each
     # GPU because the images are small. Batch size is 8 (GPUs * images/GPU).
     GPU_COUNT = 1
-    IMAGES_PER_GPU = 2
+    IMAGES_PER_GPU = 1
 
     # Number of classes (including background)
     NUM_CLASSES = 1 + 2  # background + 3 shapes
@@ -80,6 +80,7 @@ class DrugDataset (utils.Dataset) :
     # 得到该图中有多少个实例（物体）
     def get_obj_index (self , image) :
         n = np.max (image)
+        print('image_num='+n)
         return n
 
     # 解析labelme中得到的yaml文件，从而得到mask每一层对应的实例标签
@@ -89,6 +90,7 @@ class DrugDataset (utils.Dataset) :
             temp = yaml.load (f.read ())
             labels = temp ['label_names']
             del labels [0]
+            print('labels:'+labels)
         return labels
 
     # 重新写draw_mask
@@ -192,7 +194,7 @@ mask_floder = dataset_root_path + "cv2_mask"
 # yaml_floder = dataset_root_path
 imglist = os.listdir (img_floder)
 count = len (imglist)
-
+print('count:'+count)
 # train与val数据集准备
 dataset_train = DrugDataset ()
 dataset_train.load_shapes (count , img_floder , mask_floder , imglist , dataset_root_path)
